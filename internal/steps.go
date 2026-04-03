@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	sdk "github.com/GoCodeAlone/workflow/plugin/external/sdk"
@@ -17,7 +16,7 @@ func (s *stepApprovalRequest) Execute(_ context.Context, _ map[string]any, _ map
 	args := mergeArgs(config, current)
 	result, err := s.engine.InvokeMethod("create", args)
 	if err != nil {
-		return nil, fmt.Errorf("step.approval_request: %w", err)
+		return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 	}
 	return &sdk.StepResult{Output: result}, nil
 }
@@ -31,7 +30,7 @@ func (s *stepApprovalCheck) Execute(_ context.Context, _ map[string]any, _ map[s
 	args := mergeArgs(config, current)
 	result, err := s.engine.InvokeMethod("get", args)
 	if err != nil {
-		return nil, fmt.Errorf("step.approval_check: %w", err)
+		return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 	}
 	return &sdk.StepResult{Output: result}, nil
 }
@@ -45,7 +44,7 @@ func (s *stepApprovalDecide) Execute(_ context.Context, _ map[string]any, _ map[
 	args := mergeArgs(config, current)
 	result, err := s.engine.InvokeMethod("decide", args)
 	if err != nil {
-		return nil, fmt.Errorf("step.approval_decide: %w", err)
+		return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 	}
 	return &sdk.StepResult{Output: result}, nil
 }
@@ -59,7 +58,7 @@ func (s *stepApprovalList) Execute(_ context.Context, _ map[string]any, _ map[st
 	args := mergeArgs(config, current)
 	result, err := s.engine.InvokeMethod("list", args)
 	if err != nil {
-		return nil, fmt.Errorf("step.approval_list: %w", err)
+		return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 	}
 	return &sdk.StepResult{Output: result}, nil
 }
@@ -73,7 +72,7 @@ func (s *stepApprovalEscalate) Execute(_ context.Context, _ map[string]any, _ ma
 	args := mergeArgs(config, current)
 	result, err := s.engine.InvokeMethod("escalate", args)
 	if err != nil {
-		return nil, fmt.Errorf("step.approval_escalate: %w", err)
+		return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 	}
 	return &sdk.StepResult{Output: result}, nil
 }
@@ -87,7 +86,7 @@ func (s *stepApprovalWait) Execute(ctx context.Context, _ map[string]any, _ map[
 	args := mergeArgs(config, current)
 	reqID := strVal(args, "request_id")
 	if reqID == "" {
-		return nil, fmt.Errorf("step.approval_wait: request_id is required")
+		return &sdk.StepResult{Output: map[string]any{"error": "request_id is required"}}, nil
 	}
 
 	pollMs := 500
@@ -106,7 +105,7 @@ func (s *stepApprovalWait) Execute(ctx context.Context, _ map[string]any, _ map[
 	for {
 		req, err := s.engine.store.Get(reqID)
 		if err != nil {
-			return nil, fmt.Errorf("step.approval_wait: %w", err)
+			return &sdk.StepResult{Output: map[string]any{"error": err.Error()}}, nil
 		}
 		if req.Status.IsTerminal() {
 			return &sdk.StepResult{Output: requestToMap(req)}, nil

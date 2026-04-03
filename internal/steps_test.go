@@ -103,13 +103,16 @@ func TestStepApprovalDecide_InvalidDecision(t *testing.T) {
 	reqID := res.Output["id"].(string)
 
 	decideStep, _ := sp.CreateStep("step.approval_decide", "dec1", nil)
-	_, err := decideStep.Execute(context.Background(), nil, nil, map[string]any{
+	result, err := decideStep.Execute(context.Background(), nil, nil, map[string]any{
 		"request_id": reqID,
 		"actor":      "alice",
 		"decision":   "maybe",
 	}, nil, nil)
-	if err == nil {
-		t.Error("expected error for invalid decision")
+	if err != nil {
+		t.Fatalf("Execute should not return Go error: %v", err)
+	}
+	if result.Output["error"] == nil {
+		t.Error("expected error in output map for invalid decision")
 	}
 }
 
@@ -213,9 +216,12 @@ func TestStepApprovalWait_AlreadyDecided(t *testing.T) {
 func TestStepApprovalWait_MissingRequestID(t *testing.T) {
 	sp, _ := setupPlugin(t)
 	waitStep, _ := sp.CreateStep("step.approval_wait", "wait1", nil)
-	_, err := waitStep.Execute(context.Background(), nil, nil, nil, nil, nil)
-	if err == nil {
-		t.Error("expected error for missing request_id")
+	result, err := waitStep.Execute(context.Background(), nil, nil, nil, nil, nil)
+	if err != nil {
+		t.Fatalf("Execute should not return Go error: %v", err)
+	}
+	if result.Output["error"] == nil {
+		t.Error("expected error in output map for missing request_id")
 	}
 }
 

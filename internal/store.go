@@ -45,7 +45,7 @@ func (s *Store) Create(req *ApprovalRequest) (*ApprovalRequest, error) {
 	return req, nil
 }
 
-// Get retrieves a request by ID.
+// Get retrieves a request by ID. Returns a deep copy to prevent data races.
 func (s *Store) Get(id string) (*ApprovalRequest, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -53,22 +53,22 @@ func (s *Store) Get(id string) (*ApprovalRequest, error) {
 	if !ok {
 		return nil, fmt.Errorf("approval request %s not found", id)
 	}
-	return r, nil
+	return r.clone(), nil
 }
 
-// List returns all requests, optionally filtered by approver.
+// List returns all requests, optionally filtered by approver. Returns deep copies to prevent data races.
 func (s *Store) List(approver string) []*ApprovalRequest {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	var result []*ApprovalRequest
 	for _, r := range s.requests {
 		if approver == "" {
-			result = append(result, r)
+			result = append(result, r.clone())
 			continue
 		}
 		for _, a := range r.Approvers {
 			if a == approver {
-				result = append(result, r)
+				result = append(result, r.clone())
 				break
 			}
 		}
@@ -139,8 +139,12 @@ func (s *Store) CheckExpiry(now time.Time) []string {
 }
 
 func resolveStatus(r *ApprovalRequest) ApprovalStatus {
-	approvals, rejections := 0, 0
+	approvals, rejections, relevant := 0, 0, 0
 	for _, d := range r.Decisions {
+		if !contains(r.Approvers, d.Actor) {
+			continue // skip stale decisions from removed approvers
+		}
+		relevant++
 		switch d.Decision {
 		case "approve":
 			approvals++
@@ -151,7 +155,7 @@ func resolveStatus(r *ApprovalRequest) ApprovalStatus {
 	if approvals >= r.RequiredApprovals {
 		return StatusApproved
 	}
-	remaining := len(r.Approvers) - len(r.Decisions)
+	remaining := len(r.Approvers) - relevant
 	if remaining+approvals < r.RequiredApprovals {
 		return StatusRejected
 	}
@@ -164,6 +168,15 @@ func resolveStatus(r *ApprovalRequest) ApprovalStatus {
 	return StatusPending
 }
 
+func contains(ss []string, s string) bool {
+	for _, v := range ss {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
 func isAuthorizedApprover(r *ApprovalRequest, actor string) bool {
 	for _, a := range r.Approvers {
 		if a == actor {
@@ -171,6 +184,15 @@ func isAuthorizedApprover(r *ApprovalRequest, actor string) bool {
 		}
 	}
 	return false
+}
+
+func (r *ApprovalRequest) clone() *ApprovalRequest {
+	cp := *r
+	cp.Approvers = make([]string, len(r.Approvers))
+	copy(cp.Approvers, r.Approvers)
+	cp.Decisions = make([]ApprovalDecision, len(r.Decisions))
+	copy(cp.Decisions, r.Decisions)
+	return &cp
 }
 
 func generateID() string {

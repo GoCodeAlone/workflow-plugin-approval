@@ -236,6 +236,37 @@ func TestStore_ApproveAfterEscalation(t *testing.T) {
 	}
 }
 
+func TestStore_EscalationClearsStaleDecisions(t *testing.T) {
+	s := NewStore()
+	req, _ := s.Create(&ApprovalRequest{
+		Approvers:         []string{"alice", "bob", "carol"},
+		RequiredApprovals: 2,
+	})
+	// alice approves before escalation
+	s.UpdateDecision(req.ID, ApprovalDecision{Actor: "alice", Decision: "approve"})
+
+	// escalate to new approvers — alice's decision is now stale
+	s.Escalate(req.ID, []string{"manager1", "manager2"})
+
+	// manager1 approves — only 1 of 2 new approvers, should still be pending
+	updated, err := s.UpdateDecision(req.ID, ApprovalDecision{Actor: "manager1", Decision: "approve"})
+	if err != nil {
+		t.Fatalf("UpdateDecision after escalation: %v", err)
+	}
+	if updated.Status != StatusEscalated {
+		t.Errorf("expected escalated (1 of 2 new approvers), got %s", updated.Status)
+	}
+
+	// manager2 approves — now 2 of 2, should be approved
+	updated, err = s.UpdateDecision(req.ID, ApprovalDecision{Actor: "manager2", Decision: "approve"})
+	if err != nil {
+		t.Fatalf("UpdateDecision: %v", err)
+	}
+	if updated.Status != StatusApproved {
+		t.Errorf("expected approved after 2/2 new approvers, got %s", updated.Status)
+	}
+}
+
 func TestApprovalStatus_IsTerminal(t *testing.T) {
 	cases := []struct {
 		status   ApprovalStatus
