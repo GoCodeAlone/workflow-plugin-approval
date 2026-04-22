@@ -6,11 +6,15 @@ import (
 	sdk "github.com/GoCodeAlone/workflow/plugin/external/sdk"
 )
 
+// Version is set at build time via -ldflags
+// "-X github.com/GoCodeAlone/workflow-plugin-approval/internal.Version=X.Y.Z"
+var Version = "dev"
+
 // Manifest returns the plugin metadata used by the workflow engine for
 // discovery and capability negotiation.
 var Manifest = sdk.PluginManifest{
 	Name:        "workflow-plugin-approval",
-	Version:     "0.1.0",
+	Version:     Version,
 	Description: "Human-in-the-loop approval workflows for the workflow engine",
 	Author:      "GoCodeAlone",
 }
