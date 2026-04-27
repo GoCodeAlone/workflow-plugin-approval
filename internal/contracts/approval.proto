@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package workflow.plugins.approval.v1;
+
+option go_package = "github.com/GoCodeAlone/workflow-plugin-approval/internal/contracts";
+
+message ApprovalEngineConfig {}
+
+message ApprovalCreateConfig {
+  string id = 1;
+  string pipeline_id = 2;
+  string title = 3;
+  string description = 4;
+  repeated string approvers = 5;
+  int32 required_approvals = 6;
+  int32 ttl_seconds = 7;
+  string engine = 100;
+}
+
+message ApprovalCreateArgs {
+  string id = 1;
+  string pipeline_id = 2;
+  string title = 3;
+  string description = 4;
+  repeated string approvers = 5;
+  int32 required_approvals = 6;
+  int32 ttl_seconds = 7;
+}
+
+message ApprovalGetConfig {
+  string request_id = 1;
+  string engine = 100;
+}
+
+message ApprovalGetArgs {
+  string request_id = 1;
+}
+
+message ApprovalDecideConfig {
+  string request_id = 1;
+  string actor = 2;
+  string decision = 3;
+  string comment = 4;
+  string engine = 100;
+}
+
+message ApprovalDecideArgs {
+  string request_id = 1;
+  string actor = 2;
+  string decision = 3;
+  string comment = 4;
+}
+
+message ApprovalListConfig {
+  string approver = 1;
+  string engine = 100;
+}
+
+message ApprovalListArgs {
+  string approver = 1;
+}
+
+message ApprovalEscalateConfig {
+  string request_id = 1;
+  repeated string new_approvers = 2;
+  string engine = 100;
+}
+
+message ApprovalEscalateArgs {
+  string request_id = 1;
+  repeated string new_approvers = 2;
+}
+
+message ApprovalWaitConfig {
+  string request_id = 1;
+  int32 poll_interval_ms = 2;
+  int32 timeout_seconds = 3;
+  string engine = 100;
+}
+
+message ApprovalWaitArgs {
+  string request_id = 1;
+  int32 poll_interval_ms = 2;
+  int32 timeout_seconds = 3;
+}
+
+message ApprovalCheckExpiryArgs {}
+
+message ApprovalDecision {
+  string actor = 1;
+  string decision = 2;
+  string comment = 3;
+  string timestamp = 4;
+}
+
+message ApprovalRequest {
+  string id = 1;
+  string pipeline_id = 2;
+  string title = 3;
+  string description = 4;
+  repeated string approvers = 5;
+  int32 required_approvals = 6;
+  string status = 7;
+  repeated ApprovalDecision decisions = 8;
+  string continuation_token = 9;
+  string created_at = 10;
+  string expires_at = 11;
+  string error = 100;
+  bool timed_out = 101;
+}
+
+message ApprovalListOutput {
+  repeated ApprovalRequest requests = 1;
+  int32 count = 2;
+  string error = 100;
+}
+
+message ApprovalCheckExpiryOutput {
+  repeated string expired = 1;
+  int32 count = 2;
+  string error = 100;
+}
