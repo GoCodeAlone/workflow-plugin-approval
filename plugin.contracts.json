@@ -1,0 +1,107 @@
+{
+  "version": "v1",
+  "contracts": [
+    {
+      "kind": "module",
+      "type": "approval.engine",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalEngineConfig"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_request",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalCreateConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalCreateArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_check",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalGetConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalGetArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_decide",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalDecideConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalDecideArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_list",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalListConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalListArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalListOutput"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_escalate",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalEscalateConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalEscalateArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "step",
+      "type": "step.approval_wait",
+      "mode": "strict",
+      "config": "workflow.plugins.approval.v1.ApprovalWaitConfig",
+      "input": "workflow.plugins.approval.v1.ApprovalWaitArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "create",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalCreateArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "get",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalGetArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "decide",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalDecideArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "list",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalListArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalListOutput"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "escalate",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalEscalateArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalRequest"
+    },
+    {
+      "kind": "service_method",
+      "serviceName": "approval.engine",
+      "method": "check_expiry",
+      "mode": "strict",
+      "input": "workflow.plugins.approval.v1.ApprovalCheckExpiryArgs",
+      "output": "workflow.plugins.approval.v1.ApprovalCheckExpiryOutput"
+    }
+  ]
+}
