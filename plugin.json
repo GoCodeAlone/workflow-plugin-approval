@@ -1,19 +1,25 @@
 {
     "name": "workflow-plugin-approval",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Human-in-the-loop approval workflows for the workflow engine",
     "author": "GoCodeAlone",
     "license": "MIT",
     "type": "external",
     "tier": "community",
     "private": false,
-    "minEngineVersion": "0.19.0-alpha.5",
-    "keywords": ["approval", "human-in-the-loop", "workflow"],
+    "minEngineVersion": "0.51.7",
+    "keywords": [
+        "approval",
+        "human-in-the-loop",
+        "workflow"
+    ],
     "homepage": "https://github.com/GoCodeAlone/workflow-plugin-approval",
     "repository": "https://github.com/GoCodeAlone/workflow-plugin-approval",
     "capabilities": {
         "configProvider": false,
-        "moduleTypes": ["approval.engine"],
+        "moduleTypes": [
+            "approval.engine"
+        ],
         "stepTypes": [
             "step.approval_request",
             "step.approval_check",
