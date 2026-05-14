@@ -1,6 +1,6 @@
 {
     "name": "workflow-plugin-approval",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "Human-in-the-loop approval workflows for the workflow engine",
     "author": "GoCodeAlone",
     "license": "MIT",
