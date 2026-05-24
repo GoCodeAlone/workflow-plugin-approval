@@ -1,35 +1,41 @@
 {
-    "name": "workflow-plugin-approval",
-    "version": "0.1.2",
-    "description": "Human-in-the-loop approval workflows for the workflow engine",
-    "author": "GoCodeAlone",
-    "license": "MIT",
-    "type": "external",
-    "tier": "community",
-    "private": false,
-    "minEngineVersion": "0.19.0-alpha.5",
-    "keywords": ["approval", "human-in-the-loop", "workflow"],
-    "homepage": "https://github.com/GoCodeAlone/workflow-plugin-approval",
-    "repository": "https://github.com/GoCodeAlone/workflow-plugin-approval",
-    "capabilities": {
-        "configProvider": false,
-        "moduleTypes": ["approval.engine"],
-        "stepTypes": [
-            "step.approval_request",
-            "step.approval_check",
-            "step.approval_decide",
-            "step.approval_list",
-            "step.approval_escalate",
-            "step.approval_wait"
-        ],
-        "serviceMethods": [
-            "approval.engine/create",
-            "approval.engine/get",
-            "approval.engine/decide",
-            "approval.engine/list",
-            "approval.engine/escalate",
-            "approval.engine/check_expiry"
-        ],
-        "triggerTypes": []
-    }
+  "name": "workflow-plugin-approval",
+  "version": "0.1.4",
+  "description": "Human-in-the-loop approval workflows for the workflow engine",
+  "author": "GoCodeAlone",
+  "license": "MIT",
+  "type": "external",
+  "tier": "community",
+  "private": false,
+  "minEngineVersion": "0.19.0-alpha.5",
+  "keywords": [
+    "approval",
+    "human-in-the-loop",
+    "workflow"
+  ],
+  "homepage": "https://github.com/GoCodeAlone/workflow-plugin-approval",
+  "repository": "https://github.com/GoCodeAlone/workflow-plugin-approval",
+  "capabilities": {
+    "configProvider": false,
+    "moduleTypes": [
+      "approval.engine"
+    ],
+    "stepTypes": [
+      "step.approval_request",
+      "step.approval_check",
+      "step.approval_decide",
+      "step.approval_list",
+      "step.approval_escalate",
+      "step.approval_wait"
+    ],
+    "serviceMethods": [
+      "approval.engine/create",
+      "approval.engine/get",
+      "approval.engine/decide",
+      "approval.engine/list",
+      "approval.engine/escalate",
+      "approval.engine/check_expiry"
+    ],
+    "triggerTypes": []
+  }
 }
